@@ -1,0 +1,139 @@
+<mvc:View xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:viz="sap.viz.ui5.controls"
+    xmlns:vizData="sap.viz.ui5.data"
+    controllerName="maintnotification.ext.analytics.AnalyticsPage">
+
+    <Page showHeader="false">
+        <content>
+            <ScrollContainer height="100%" vertical="true" horizontal="false">
+                <VBox>
+
+                    <!-- KPI Tiles -->
+                    <HBox class="sapUiMediumMarginTop sapUiMediumMarginBegin sapUiSmallMarginBottom" wrap="Wrap">
+                        <GenericTile class="sapUiTinyMarginEnd sapUiTinyMarginBottom"
+                                     header="Total Notifications" subheader="All records" frameType="OneByOne">
+                            <tileContent>
+                                <TileContent>
+                                    <content>
+                                        <NumericContent value="{kpi>/count}" valueColor="Neutral" indicator="None" />
+                                    </content>
+                                </TileContent>
+                            </tileContent>
+                        </GenericTile>
+                        <GenericTile class="sapUiTinyMarginEnd sapUiTinyMarginBottom"
+                                     header="Total SLA Hours" subheader="Sum all notifications" frameType="OneByOne">
+                            <tileContent>
+                                <TileContent unit="hrs">
+                                    <content>
+                                        <NumericContent value="{kpi>/totalHours}" valueColor="Critical" indicator="Up" />
+                                    </content>
+                                </TileContent>
+                            </tileContent>
+                        </GenericTile>
+                        <GenericTile class="sapUiTinyMarginEnd sapUiTinyMarginBottom"
+                                     header="Open Notifications" subheader="Status: Open" frameType="OneByOne">
+                            <tileContent>
+                                <TileContent>
+                                    <content>
+                                        <NumericContent value="{kpi>/openCount}" valueColor="Error" indicator="None" />
+                                    </content>
+                                </TileContent>
+                            </tileContent>
+                        </GenericTile>
+                    </HBox>
+
+                    <!-- Filters -->
+                    <HBox class="sapUiSmallMarginBegin sapUiSmallMarginEnd sapUiSmallMarginBottom" alignItems="Center" wrap="Wrap">
+                        <Label text="Status:" class="sapUiTinyMarginEnd" />
+                        <Select id="filterStatus" change=".onFilterChange" class="sapUiSmallMarginEnd" width="11rem">
+                            <items>
+                                <core:Item key="" text="All Statuses" />
+                            </items>
+                        </Select>
+                        <Label text="Priority:" class="sapUiTinyMarginEnd" />
+                        <Select id="filterPriority" change=".onFilterChange" class="sapUiSmallMarginEnd" width="11rem">
+                            <items>
+                                <core:Item key="" text="All Priorities" />
+                            </items>
+                        </Select>
+                        <Label text="Plant:" class="sapUiTinyMarginEnd" />
+                        <Select id="filterPlant" change=".onFilterChange" class="sapUiSmallMarginEnd" width="11rem">
+                            <items>
+                                <core:Item key="" text="All Plants" />
+                            </items>
+                        </Select>
+                        <Label text="Technician:" class="sapUiTinyMarginEnd" />
+                        <Select id="filterTechnician" change=".onFilterChange" class="sapUiSmallMarginEnd" width="13rem">
+                            <items>
+                                <core:Item key="" text="All Technicians" />
+                            </items>
+                        </Select>
+                        <Button text="Reset" icon="sap-icon://clear-filter" type="Transparent" press=".onResetFilters" />
+                    </HBox>
+
+                    <!-- Chart 1: SLA Hours by Status -->
+                    <VBox class="sapUiSmallMarginBegin sapUiSmallMarginEnd sapUiSmallMarginBottom">
+                        <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapUiSmallMarginBottom">
+                            <Title text="SLA Hours by Status" />
+                            <SegmentedButton id="typeStatusBtn" selectedKey="bar" selectionChange=".onChartTypeChange">
+                                <items>
+                                    <SegmentedButtonItem key="bar"    icon="sap-icon://horizontal-bar-chart" tooltip="Bar" />
+                                    <SegmentedButtonItem key="column" icon="sap-icon://vertical-bar-chart"   tooltip="Column" />
+                                    <SegmentedButtonItem key="line"   icon="sap-icon://line-chart"            tooltip="Line" />
+                                    <SegmentedButtonItem key="pie"    icon="sap-icon://pie-chart"             tooltip="Pie" />
+                                    <SegmentedButtonItem key="donut"  icon="sap-icon://donut-chart"           tooltip="Donut" />
+                                </items>
+                            </SegmentedButton>
+                        </HBox>
+                        <viz:VizFrame id="vizStatus" vizType="bar" width="100%" height="280px"
+                                      uiConfig="{applicationSet:'fiori'}">
+                            <viz:dataset>
+                                <vizData:FlattenedDataset data="{chartStatus>/data}">
+                                    <vizData:dimensions>
+                                        <vizData:DimensionDefinition name="Status" value="{chartStatus>StatusText}" />
+                                    </vizData:dimensions>
+                                    <vizData:measures>
+                                        <vizData:MeasureDefinition name="SLA Hours" value="{chartStatus>SlaHours}" />
+                                    </vizData:measures>
+                                </vizData:FlattenedDataset>
+                            </viz:dataset>
+                        </viz:VizFrame>
+                    </VBox>
+
+                    <!-- Chart 2: SLA Hours by Priority -->
+                    <VBox class="sapUiSmallMarginBegin sapUiSmallMarginEnd sapUiMediumMarginTop sapUiSmallMarginBottom">
+                        <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapUiSmallMarginBottom">
+                            <Title text="SLA Hours by Priority" />
+                            <SegmentedButton id="typePriorityBtn" selectedKey="bar" selectionChange=".onChartTypeChange">
+                                <items>
+                                    <SegmentedButtonItem key="bar"    icon="sap-icon://horizontal-bar-chart" tooltip="Bar" />
+                                    <SegmentedButtonItem key="column" icon="sap-icon://vertical-bar-chart"   tooltip="Column" />
+                                    <SegmentedButtonItem key="line"   icon="sap-icon://line-chart"            tooltip="Line" />
+                                    <SegmentedButtonItem key="pie"    icon="sap-icon://pie-chart"             tooltip="Pie" />
+                                    <SegmentedButtonItem key="donut"  icon="sap-icon://donut-chart"           tooltip="Donut" />
+                                </items>
+                            </SegmentedButton>
+                        </HBox>
+                        <viz:VizFrame id="vizPriority" vizType="bar" width="100%" height="280px"
+                                      uiConfig="{applicationSet:'fiori'}">
+                            <viz:dataset>
+                                <vizData:FlattenedDataset data="{chartPriority>/data}">
+                                    <vizData:dimensions>
+                                        <vizData:DimensionDefinition name="Priority" value="{chartPriority>PriorityText}" />
+                                    </vizData:dimensions>
+                                    <vizData:measures>
+                                        <vizData:MeasureDefinition name="SLA Hours" value="{chartPriority>SlaHours}" />
+                                    </vizData:measures>
+                                </vizData:FlattenedDataset>
+                            </viz:dataset>
+                        </viz:VizFrame>
+                    </VBox>
+
+                </VBox>
+            </ScrollContainer>
+        </content>
+    </Page>
+
+</mvc:View>
