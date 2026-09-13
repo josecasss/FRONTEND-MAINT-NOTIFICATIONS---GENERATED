@@ -174,7 +174,7 @@ sap.ui.define([
                 oViz.addFeed(new FeedItem({ uid: "color", type: "Dimension", values: [sDimLabel] }));
                 oViz.addFeed(new FeedItem({ uid: "size",  type: "Measure",   values: ["SLA Hours"] }));
             } else {
-                oViz.addFeed(new FeedItem({ uid: "valueAxis",    type: "Measure",   values: [sDimLabel] }));
+                oViz.addFeed(new FeedItem({ uid: "valueAxis",    type: "Measure",   values: ["SLA Hours"] }));
                 oViz.addFeed(new FeedItem({ uid: "categoryAxis", type: "Dimension", values: [sDimLabel] }));
             }
         }
